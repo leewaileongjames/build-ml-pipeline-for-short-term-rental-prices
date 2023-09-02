@@ -41,30 +41,57 @@ def go(args):
 
             df.to_csv(fp.name, index=False)
 
-            log_artifact(
-                f"{k}_data.csv",
-                f"{k}_data",
-                f"{k} split of dataset",
-                fp.name,
-                run,
+            artifact = wandb.Artifact(
+                name=f"{k}_data.csv",
+                type=f"{k}_data",
+                description=f"{k} split of dataset {args.input}",
             )
+
+            artifact.add_file(fp.name)
+
+            logger.info(f"Logging artifact {k}_data.csv of dataset {args.input}")
+            run.log_artifact(artifact)
+
+            #log_artifact(
+            #    f"{k}_data.csv",
+            #    f"{k}_data",
+            #    f"{k} split of dataset",
+            #    fp.name,
+            #    run,
+            #)
+
+            artifact.wait()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Split test and remainder")
 
-    parser.add_argument("input", type=str, help="Input artifact to split")
-
     parser.add_argument(
-        "test_size", type=float, help="Size of the test split. Fraction of the dataset, or number of items"
+        "--input", 
+        type=str, 
+        help="Input artifact to split"
     )
 
     parser.add_argument(
-        "--random_seed", type=int, help="Seed for random number generator", default=42, required=False
+        "--test_size", 
+        type=float, 
+        help="Size of the test split. Fraction of the dataset, or number of items"
     )
 
     parser.add_argument(
-        "--stratify_by", type=str, help="Column to use for stratification", default='none', required=False
+        "--random_seed", 
+        type=int, 
+        help="Seed for random number generator", 
+        default=42, 
+        required=False
+    )
+
+    parser.add_argument(
+        "--stratify_by", 
+        type=str, 
+        help="Column to use for stratification", 
+        default='none', 
+        required=False
     )
 
     args = parser.parse_args()
