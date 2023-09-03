@@ -6,27 +6,27 @@ entry_points:
     parameters:
 
       input_artifact:
-        description: ## ADD DESCRIPTION
+        description: Name of the artifact containing data before cleaning
         type: string
 
       output_artifact:
-        description: ## ADD DESCRIPTION
+        description: Name of the artifact containing cleaned data
         type: string
 
       output_type:
-        description: ## ADD DESCRIPTION
+        description: Type of the output artifact
         type: string
 
       output_description:
-        description: ## ADD DESCRIPTION
+        description: Add a description for the output artifact
         type: string
 
       min_price:
-        description: ## ADD DESCRIPTION
+        description: Minimum Price
         type: string
 
       max_price:
-        description: ## ADD DESCRIPTION
+        description: Maximum Price
         type: string
 
 
