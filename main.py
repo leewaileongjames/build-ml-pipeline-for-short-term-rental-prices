@@ -38,9 +38,8 @@ def go(config: DictConfig):
         if "download" in active_steps:
             # Download file and load in W&B
             _ = mlflow.run(
-                f"{config['main']['components_repository']}/get_data",
+                os.path.join(hydra.utils.get_original_cwd(), "components", "get_data"),
                 "main",
-                version='main',
                 parameters={
                     "sample": config["etl"]["sample"],
                     "artifact_name": "sample.csv",
@@ -80,9 +79,8 @@ def go(config: DictConfig):
         if "data_split" in active_steps:
 
             _ = mlflow.run(
-                f"{config['main']['components_repository']}/train_val_test_split",
+                os.path.join(hydra.utils.get_original_cwd(), "components", "train_val_test_split"),
                 "main",
-                version='main',
                 parameters={
                     "input": "clean_sample.csv:latest",
                     "test_size": config['modeling']['test_size'],
@@ -118,11 +116,16 @@ def go(config: DictConfig):
 
         if "test_regression_model" in active_steps:
 
-            ##################
-            # Implement here #
-            ##################
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "components", "test_regression_model"),
+                "main",
+                parameters={
+                    "mlflow_model": "random_forest_export:prod",
+                    "test_dataset": "test_data.csv:latest"
+                },
+            )
 
-            pass
+
 
 
 if __name__ == "__main__":
